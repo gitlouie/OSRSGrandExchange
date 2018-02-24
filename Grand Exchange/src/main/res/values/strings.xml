@@ -1,0 +1,10 @@
+<!--
+This file contains the string values being used.
+-->
+<resources>
+    <string name="app_name">Grand Exchange</string>
+    <string name="search">Search</string>
+    <string name="error_message">
+        Failed to get results. Please try again.
+    </string>
+</resources>
