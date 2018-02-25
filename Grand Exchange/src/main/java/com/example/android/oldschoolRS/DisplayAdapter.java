@@ -12,19 +12,15 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class DisplayAdapter extends RecyclerView.Adapter<DisplayAdapter.NumberViewHolder> {
 
-    //region Private Variables
-    private static final String TAG = DisplayAdapter.class.getSimpleName();
 
     private final ListItemClickListener mOnClickListener;
     private int mNumberItems;
-    private List<JSONObject> mItemList = new ArrayList<JSONObject>();
+    private List<Item> mItemList = new ArrayList<Item>();
     //endregion
 
     public interface ListItemClickListener {
@@ -38,7 +34,7 @@ public class DisplayAdapter extends RecyclerView.Adapter<DisplayAdapter.NumberVi
      * @param numberOfItems Number of items to display in list
 
      */
-    public DisplayAdapter(int numberOfItems, List<JSONObject> resultsList,
+    public DisplayAdapter(int numberOfItems, List<Item> resultsList,
                           ListItemClickListener listener) {
         mNumberItems = numberOfItems;
         mOnClickListener = listener;
@@ -57,13 +53,11 @@ public class DisplayAdapter extends RecyclerView.Adapter<DisplayAdapter.NumberVi
                 shouldAttachToParentImmediately);
         NumberViewHolder viewHolder = new NumberViewHolder(view);
 
-
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(NumberViewHolder holder, int position) {
-        Log.d(TAG, "#" + position);
         holder.bind(position, holder.itemView.getContext());
 
     }
@@ -87,6 +81,8 @@ public class DisplayAdapter extends RecyclerView.Adapter<DisplayAdapter.NumberVi
 
         // Will display the image of the item
         ImageView listItemImageView;
+        // Will display the members icon if the item is members only
+        ImageView memberImageView;
         // Will display the item name
         TextView listItemName;
         // Will display the item price
@@ -96,7 +92,8 @@ public class DisplayAdapter extends RecyclerView.Adapter<DisplayAdapter.NumberVi
         public NumberViewHolder(View itemView) {
             super(itemView);
 
-            listItemImageView = (ImageView) itemView.findViewById(R.id.imageView);
+            listItemImageView = (ImageView) itemView.findViewById(R.id.item_image);
+            memberImageView = (ImageView) itemView.findViewById(R.id.item_member);
             listItemName = (TextView) itemView.findViewById(R.id.tv_itemName);
             listItemPrice = (TextView) itemView.findViewById(R.id.tv_itemPrice);
 
@@ -107,21 +104,25 @@ public class DisplayAdapter extends RecyclerView.Adapter<DisplayAdapter.NumberVi
         void bind(int listIndex, Context context) {
 
             try {
-                JSONObject item = mItemList.get(listIndex);
+                Item item = mItemList.get(listIndex);
 
                 // Load the image onto the ImageView
-                Picasso.with(context).load(item.getString("icon_large"))
+                Picasso.with(context).load(item.getIcon())
                         .error(R.mipmap.ic_launcher)
                         .into(listItemImageView);
 
 
-                listItemName.setText(item.getString("name"));
+                listItemName.setText(item.getName());
 
-//                final JSONObject current = item.getJSONObject("current");
-//                listItemPrice.setText(current.getString("price"));
+                // If the item is a members item, display the members icon
+                if(item.getMembers()){ memberImageView.setVisibility(View.VISIBLE);}
+                else{
+                    memberImageView.setVisibility(View.GONE);
+                }
+
             }
             catch(Exception e) {
-                Log.w(TAG, "bind: failed", e);
+                e.printStackTrace();
 
             }
         }

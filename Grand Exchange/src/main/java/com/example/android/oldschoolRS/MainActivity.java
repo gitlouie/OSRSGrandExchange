@@ -1,12 +1,14 @@
 package com.example.android.oldschoolRS;
 
 import android.content.Context;
-import android.nfc.Tag;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,16 +18,19 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import com.example.android.oldschoolRS.utilities.NetworkUtils;
+import com.example.android.oldschoolRS.Item;
+
+
 
 
 public class MainActivity extends AppCompatActivity implements
@@ -44,7 +49,8 @@ public class MainActivity extends AppCompatActivity implements
 
     private Toast mToast;
 
-    private List<JSONObject> mItemList = new ArrayList<JSONObject>();
+    private List<Item> mItemList = new ArrayList<Item>();
+
     //endregion
 
     @Override
@@ -70,17 +76,15 @@ public class MainActivity extends AppCompatActivity implements
      */
     private void makeGrandExchangeSearchQuery() {
         String grandExchangeQuery = mSearchBoxEditText.getText().toString();
-        URL[] grandExchangeSearchUrl = NetworkUtils.buildUrl(grandExchangeQuery.toLowerCase());
+        URL grandExchangeSearchUrl = NetworkUtils.buildUrl(grandExchangeQuery.toLowerCase(),
+                "Buying_GF_API");
 
         // Clear the items list that populates the RecycleView each time a new item
         // query is being made
         mItemList.clear();
 
-        // Create Async tasks to query the item specified by the user. The OSRS API only returns
-        // 12 items at a time. Currently only 5 tasks are being created for a max of 60 items.
-        for (URL url : grandExchangeSearchUrl) {
-            new GrandExchangeQueryTask().execute(url);
-        }
+        new GrandExchangeQueryTask().execute(grandExchangeSearchUrl);
+
     }
 
     /**
@@ -89,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements
      */
     private void showJsonDataView() {
         mErrorMessageDisplay.setVisibility(View.INVISIBLE);
+        mNumbersList.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -97,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements
      */
     private void showErrorMessage() {
         mErrorMessageDisplay.setVisibility(View.VISIBLE);
+        mNumbersList.setVisibility(View.INVISIBLE);
     }
 
     public class GrandExchangeQueryTask extends AsyncTask<URL, Void, String> {
@@ -127,7 +133,23 @@ public class MainActivity extends AppCompatActivity implements
 
                 try {
                     final JSONObject obj = new JSONObject(grandExchangeSearchResults);
-                    final JSONArray items = obj.getJSONArray("items");
+                    final JSONObject items = obj.getJSONObject("matches");
+
+                    Iterator<String> keys = items.keys();
+                    while(keys.hasNext()) {
+                        String itemId = keys.next();
+                        JSONObject item = items.getJSONObject(itemId);
+                        Item iterData = new Item();
+
+                        iterData.setID(itemId);
+                        iterData.setDescription(item.getString("description"));
+                        iterData.setName(item.getString("name"));
+                        iterData.setMembers(TextUtils.equals(item.getString("members"),
+                                "true"));
+
+                        mItemList.add(iterData);
+                    }
+
 
                     // Empty the recycler view if no items were found
                     if (items.length() == 0) {
@@ -135,17 +157,18 @@ public class MainActivity extends AppCompatActivity implements
                         return;
                     }
 
-                    // Add all items into a list to later display on the RecyclerView
-                    for (int i = 0; i < items.length(); i++) {
-                        final JSONObject item = items.getJSONObject(i);
-                        mItemList.add(item);
-
-                    }
                     showJsonDataView();
 
                     mAdapter = new DisplayAdapter(mItemList.size(), mItemList,
                             MainActivity.this);
                     mNumbersList.setAdapter(mAdapter);
+                    LinearLayoutManager llm = new LinearLayoutManager(MainActivity.this);
+                    mNumbersList.setLayoutManager(llm);
+
+                    DividerItemDecoration itemDecor = new DividerItemDecoration(MainActivity.this, llm.getOrientation());
+                    mNumbersList.addItemDecoration(itemDecor);
+
+
                 } catch (JSONException e) {
                     Log.d(TAG, e.getMessage());
                 }
@@ -187,9 +210,13 @@ public class MainActivity extends AppCompatActivity implements
             mToast.cancel();
         }
 
-        String toastMessage = "Item #" + clickedItemIndex + " clicked.";
-        mToast = Toast.makeText(this, toastMessage, Toast.LENGTH_LONG);
+//        String toastMessage = "com.example.android.oldschoolRS.Item #" + clickedItemIndex + " clicked.";
+//        mToast = Toast.makeText(this, toastMessage, Toast.LENGTH_LONG);
 
-        mToast.show();
+        Intent myIntent = new Intent(MainActivity.this, itemSelected.class);
+        myIntent.putExtra("key", mItemList.get(clickedItemIndex).getID());
+        MainActivity.this.startActivity(myIntent);
+
+       // mToast.show();
     }
 }

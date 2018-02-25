@@ -1,6 +1,7 @@
 package com.example.android.oldschoolRS.utilities;
 
 import android.net.Uri;
+import android.text.TextUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,10 +17,12 @@ public class NetworkUtils {
 
     //region Private Variables
     final static String GRANDEXCHANGE_BASE_URL =
-            "http://services.runescape.com/m=itemdb_oldschool/api/catalogue/items.json?category=1";
+            "https://api.buying-gf.com/ge/search/";
+    final static String OSRS_BASE_URL =
+            "http://services.runescape.com/m=itemdb_oldschool/api/catalogue/detail.json?item=";
 
-    final static String PARAM_QUERY = "alpha";
-    final static String PAGE_QUERY = "page";
+    final static String PARAM_QUERY = "a";
+    final static String ITEM_QUERY = "i";
 
     //endregion
 
@@ -29,26 +32,28 @@ public class NetworkUtils {
      * @param grandExchangeSearchQuery The keyword that will be queried for.
      * @return The URL to use to query the OSRS Grand Exchange.
      */
-    public static URL[] buildUrl(String grandExchangeSearchQuery) {
-        URL[] urls = new URL[5];
+    public static URL buildUrl(String grandExchangeSearchQuery, String source) {
 
-        // Currently creating 5 URLs to be passed back.. Will revisit this later.
-        for(int i = 0; i <urls.length; i++) {
-            Uri builtUri = Uri.parse(GRANDEXCHANGE_BASE_URL).buildUpon()
-                    .appendQueryParameter(PARAM_QUERY, grandExchangeSearchQuery)
-                    .appendQueryParameter(PAGE_QUERY, Integer.toString(i+1))
-                    .build();
+        String baseURL = null;
 
-            URL url = null;
-            try {
-                url = new URL(builtUri.toString());
-                urls[i] = url;
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
+        if(source == "OSRS_API"){
+            baseURL = OSRS_BASE_URL;
+        }else         {
+            baseURL = GRANDEXCHANGE_BASE_URL;
         }
-        return urls;
+        String builtUri = baseURL + grandExchangeSearchQuery;
+
+        URL url = null;
+        try {
+            url = new URL(builtUri);
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return url;
     }
+
 
     /**
      * This method returns the entire result from the HTTP response.

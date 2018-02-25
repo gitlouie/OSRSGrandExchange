@@ -4,7 +4,14 @@ This file contains the string values being used.
 <resources>
     <string name="app_name">Grand Exchange</string>
     <string name="search">Search</string>
+    <string name="item_name">Item Name</string>
+    <string name="item_description">A vicious, curved sword.</string>
     <string name="error_message">
         Failed to get results. Please try again.
     </string>
+    <string name="current_price">Current Price:</string>
+    <string name="today_price_change">Today\'s Change:</string>
+    <string name="one_month_change">1 Month Change:</string>
+    <string name="three_month_change">3 Month Change:</string>
+    <string name="six_month_change">6 Month Change:</string>
 </resources>

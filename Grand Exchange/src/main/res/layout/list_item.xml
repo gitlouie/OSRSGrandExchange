@@ -3,42 +3,56 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="16dp">
+    android:layout_height="wrap_content">
 
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="fill_parent">
+        android:layout_height="fill_parent"
+        android:padding="3dp">
 
         <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/item_image"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginRight="5dp"
             android:layout_gravity="center_vertical|start"
             app:srcCompat="@android:color/background_dark" />
+        <ImageView
+            android:id="@+id/item_member"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:src="@drawable/member"
+            android:visibility="gone"
+            android:layout_alignBottom="@id/item_image"
+            android:layout_alignRight="@id/item_image"/>
 
         <TextView
             android:id="@+id/tv_itemName"
             style="@style/TextAppearance.AppCompat.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/item_image"
+            android:layout_toRightOf="@+id/item_image"
             android:fontFamily="monospace"
             android:maxLines="1"
-            android:layout_toRightOf="@id/imageView"
             android:textColor="#000"
-            tools:text="Rune Scimitar"
-            />
+            tools:text="Rune Scimitar" />
+
         <TextView
             android:id="@+id/tv_itemPrice"
             style="@style/TextAppearance.AppCompat.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="11dp"
+            android:layout_marginStart="11dp"
+            android:layout_toEndOf="@+id/tv_itemName"
+            android:layout_toRightOf="@+id/tv_itemName"
             android:fontFamily="monospace"
             android:maxLines="1"
-            android:layout_toRightOf="@id/tv_itemName"
             android:textColor="#000"
-            tools:text="25k"
-            />
+            tools:text="25k" />
 
     </RelativeLayout>
 </FrameLayout>
