@@ -21,8 +21,9 @@ public class NetworkUtils {
     final static String OSRS_BASE_URL =
             "http://services.runescape.com/m=itemdb_oldschool/api/catalogue/detail.json?item=";
 
-    final static String PARAM_QUERY = "a";
-    final static String ITEM_QUERY = "i";
+    final static String OSRS_GRAPH_BASE_URL =
+"http://services.runescape.com/m=itemdb_oldschool/api/graph/";
+
 
     //endregion
 
@@ -38,7 +39,11 @@ public class NetworkUtils {
 
         if(source == "OSRS_API"){
             baseURL = OSRS_BASE_URL;
-        }else         {
+        }else if(source == "OSRS_API_GRAPH") {
+            baseURL = OSRS_GRAPH_BASE_URL;
+            grandExchangeSearchQuery = grandExchangeSearchQuery + ".json";
+        }
+        else{
             baseURL = GRANDEXCHANGE_BASE_URL;
         }
         String builtUri = baseURL + grandExchangeSearchQuery;

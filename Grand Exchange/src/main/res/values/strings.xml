@@ -14,4 +14,17 @@ This file contains the string values being used.
     <string name="one_month_change">1 Month Change:</string>
     <string name="three_month_change">3 Month Change:</string>
     <string name="six_month_change">6 Month Change:</string>
+    <string name="title_activity_main2">Main2Activity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="Week">WEEK</string>
+    <string name="Month">MONTH</string>
+    <string name="Three_Months">3 MONTHS</string>
+    <string name="Six_Months">6 MONTHS</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -87,6 +87,8 @@ public class DisplayAdapter extends RecyclerView.Adapter<DisplayAdapter.NumberVi
         TextView listItemName;
         // Will display the item price
         TextView listItemPrice;
+        // Will display the item price
+        TextView listItemDesc;
 
 
         public NumberViewHolder(View itemView) {
@@ -96,6 +98,7 @@ public class DisplayAdapter extends RecyclerView.Adapter<DisplayAdapter.NumberVi
             memberImageView = (ImageView) itemView.findViewById(R.id.item_member);
             listItemName = (TextView) itemView.findViewById(R.id.tv_itemName);
             listItemPrice = (TextView) itemView.findViewById(R.id.tv_itemPrice);
+            listItemDesc = (TextView) itemView.findViewById(R.id.tv_itemDesc);
 
             itemView.setOnClickListener(this);
         }
@@ -113,6 +116,7 @@ public class DisplayAdapter extends RecyclerView.Adapter<DisplayAdapter.NumberVi
 
 
                 listItemName.setText(item.getName());
+                listItemDesc.setText(item.getDescription());
 
                 // If the item is a members item, display the members icon
                 if(item.getMembers()){ memberImageView.setVisibility(View.VISIBLE);}

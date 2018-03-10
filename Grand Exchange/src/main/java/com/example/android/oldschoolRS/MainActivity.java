@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements
         mNumbersList.setLayoutManager(layoutManager);
         mNumbersList.setHasFixedSize(true);
 
+
     }
 
     /**
